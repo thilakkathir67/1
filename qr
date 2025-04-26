@@ -1,30 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>QR Code Generator</title>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    input { padding: 10px; width: 250px; }
-    button { padding: 10px 20px; margin: 10px; }
-    canvas { margin-top: 20px; }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f0f0f0;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    .inputs, .qr-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .qr-box {
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #aaa;
+    }
   </style>
 </head>
 <body>
-  <h2>QR Code Generator</h2>
-  <input type="text" id="text" placeholder="Enter text or URL" />
-  <button onclick="generateQRCode()">Generate</button>
-  <br>
-  <canvas id="qrcode"></canvas>
 
-  <script>
-    function generateQRCode() {
-      const text = document.getElementById("text").value;
-      const canvas = document.getElementById("qrcode");
-      QRCode.toCanvas(canvas, text, { width: 200 }, function (error) {
-        if (error) console.error(error);
-      });
-    }
-  </script>
+<h2>QR Code Generator for Products</h2>
+
+<input type="number" id="count" placeholder="Number of products?" min="1">
+<button onclick="createInputFields()">Add Products</button>
+
+<div class="inputs" id="productInputs"></div>
+
+<button onclick="generateQRCodes()">Generate QR Codes</button>
+
+<div class="qr-container" id="qrContainer"></div>
+
+<!-- QRCode.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+function createInputFields() {
+  const count = parseInt(document.getElementById('count').value);
+  const inputDiv = document.getElementById('productInputs');
+  inputDiv.innerHTML = "";
+
+  if (isNaN(count) || count <= 0) {
+    alert("Enter valid number!");
+    return;
+  }
+
+  for (let i = 0; i < count; i++) {
+    const input = document.createElement("input");
+    input.placeholder = `Product ${i + 1} name`;
+    input.className = "product-name";
+    inputDiv.appendChild(input);
+  }
+}
+
+function generateQRCodes() {
+  const inputs = document.querySelectorAll(".product-name");
+  const qrContainer = document.getElementById("qrContainer");
+  qrContainer.innerHTML = "";
+
+  inputs.forEach((input, i) => {
+    const name = input.value.trim() || `Product ${i + 1}`;
+    const box = document.createElement("div");
+    box.className = "qr-box";
+
+    const label = document.createElement("p");
+    label.textContent = name;
+    box.appendChild(label);
+
+    const qr = document.createElement("div");
+    box.appendChild(qr);
+
+    new QRCode(qr, {
+      text: name,
+      width: 128,
+      height: 128
+    });
+
+    qrContainer.appendChild(box);
+  });
+}
+</script>
+
 </body>
 </html>
