@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MyBank</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #eef; }
+    .box { margin: 30px auto; width: 300px; padding: 20px; background: white; border-radius: 10px; }
+    input, button { width: 90%; margin: 10px 0; padding: 10px; }
+  </style>
+</head>
+<body>
+
+<div id="loginBox" class="box">
+  <h2>Login</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" placeholder="Password" type="password">
+  <button onclick="login()">Login</button>
+</div>
+
+<div id="dashboard" class="box" style="display:none;">
+  <h2>Welcome, <span id="userLabel"></span></h2>
+  <p>Balance: ₹<span id="balance">1000</span></p>
+
+  <input id="amount" type="number" placeholder="Enter amount">
+
+  <button onclick="deposit()">Deposit</button>
+  <button onclick="withdraw()">Withdraw</button>
+  <button onclick="transfer()">Transfer to Friend</button>
+
+  <button onclick="logout()" style="margin-top:20px;background:#f55;color:white;">Logout</button>
+</div>
+
+<script>
+  let balance = 1000;
+
+  function login() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    if (user === "user" && pass === "1234") {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      document.getElementById("userLabel").innerText = user;
+    } else {
+      alert("Invalid credentials");
+    }
+  }
+
+  function deposit() {
+    let amt = parseFloat(document.getElementById("amount").value);
+    if (amt > 0) {
+      balance += amt;
+      updateBalance();
+    }
+  }
+
+  function withdraw() {
+    let amt = parseFloat(document.getElementById("amount").value);
+    if (amt > 0 && amt <= balance) {
+      balance -= amt;
+      updateBalance();
+    } else {
+      alert("Insufficient balance");
+    }
+  }
+
+  function transfer() {
+    let amt = parseFloat(document.getElementById("amount").value);
+    if (amt > 0 && amt <= balance) {
+      balance -= amt;
+      updateBalance();
+      alert("Transferred ₹" + amt + " to your friend.");
+    } else {
+      alert("Insufficient balance");
+    }
+  }
+
+  function updateBalance() {
+    document.getElementById("balance").innerText = balance;
+  }
+
+  function logout() {
+    location.reload();
+  }
+</script>
+
+</body>
+</html>
