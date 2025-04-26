@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Chat App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f3;
+      display: flex;
+      justify-content: center;
+      padding-top: 50px;
+    }
+    .chat-container {
+      background: white;
+      width: 400px;
+      height: 500px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+    .message {
+      background: #dcf8c6;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      max-width: 70%;
+    }
+    .bot-message {
+      background: #e0e0e0;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      max-width: 70%;
+      align-self: flex-start;
+    }
+    .input-area {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+    }
+    .input-area button {
+      padding: 10px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .input-area input:focus, .input-area button:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="messages" id="messages"></div>
+  <div class="input-area">
+    <input type="text" id="messageInput" placeholder="Ask me anything...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  const responses = {
+    "palindromic number": `// Check Palindromic Number in JavaScript
+function isPalindrome(num) {
+  let str = num.toString();
+  let reversed = str.split('').reverse().join('');
+  return str === reversed;
+}
+console.log(isPalindrome(121)); // true
+console.log(isPalindrome(123)); // false`,
+    
+    "factorial code": `// Find Factorial in JavaScript
+function factorial(n) {
+  if (n === 0) return 1;
+  return n * factorial(n - 1);
+}
+console.log(factorial(5)); // 120`,
+
+    "fibonacci series": `// Fibonacci Series in JavaScript
+function fibonacci(n) {
+  let a = 0, b = 1, next;
+  for(let i=1; i<=n; i++){
+    console.log(a);
+    next = a + b;
+    a = b;
+    b = next;
+  }
+}
+fibonacci(5);`
+  };
+
+  function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const userText = input.value.trim();
+
+    if (userText === '') return;
+
+    addMessage(userText, 'message');
+    input.value = '';
+
+    setTimeout(() => {
+      autoRespond(userText.toLowerCase());
+    }, 500);
+  }
+
+  function addMessage(text, className) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add(className);
+    messageDiv.textContent = text;
+    document.getElementById('messages').appendChild(messageDiv);
+
+    // Scroll to bottom
+    const messages = document.getElementById('messages');
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function autoRespond(userText) {
+    if (userText.includes('palindrome')) {
+      addMessage(responses["palindromic number"], 'bot-message');
+    } else if (userText.includes('factorial')) {
+      addMessage(responses["factorial code"], 'bot-message');
+    } else if (userText.includes('fibonacci')) {
+      addMessage(responses["fibonacci series"], 'bot-message');
+    } else {
+      addMessage("Sorry, I don't understand that yet 😔", 'bot-message');
+    }
+  }
+
+  document.getElementById('messageInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+</script>
+
+</body>
+</html>
